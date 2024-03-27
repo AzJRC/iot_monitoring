@@ -1,12 +1,12 @@
 import './App.css'
-import { Form } from './components/Form/Form'
+import { RegistrationForm } from './components/RegistrationForm/Registration'
 
 function App() {
 
 
   return (
     <>
-      <Form />
+      <RegistrationForm />
     </>
   )
 }

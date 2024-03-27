@@ -20,3 +20,14 @@
     font-size: 1rem;
     margin-right: 1rem;
 }
+
+.form__btn {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.login__link {
+    color: rgb(150, 36, 36);
+}
