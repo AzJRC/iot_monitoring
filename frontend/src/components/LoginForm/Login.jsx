@@ -11,7 +11,7 @@ export const LoginForm = () => {
 	const { setAuth } = useContext(AuthContext);
 
 	const USER_REGEX = /^(?=.*[a-zA-Z])[a-zA-Z0-9&/$!]{4,25}$/;
-	const PWD_REGEX = /^[a-z]{4,32}$/;
+	const PWD_REGEX = /^[a-z][a-zA-Z0-9&/$!]{4,32}$/;
 
 	//	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[&/$!])[a-zA-Z0-9&/$!]{8,32}$/;
 
@@ -24,7 +24,9 @@ export const LoginForm = () => {
 	const [pwd, setPwd] = useState("");
 	const [validPwd, setValidPwd] = useState(false);
 
-	const [errMsg, setErrMsg] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("");
+	const [error, setError] = useState(false);
+
 	const [success, setSuccess] = useState(false);
 
 	const [pwdInputSelected, setPwdInputSelected] = useState(false);
@@ -48,7 +50,7 @@ export const LoginForm = () => {
 	}, [pwd]);
 
 	useEffect(() => {
-		setErrMsg("");
+		setError("");
 	}, [user, pwd]);
 
 
@@ -57,33 +59,41 @@ export const LoginForm = () => {
 		e.preventDefault();
 
 		const userCredentials = { user, pwd };
-
-		fetch(SERVER_URL + LOGIN_URL, {
-			method: "POST",
-			body: JSON.stringify(userCredentials),
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: 'include'
-		})
-			.then((res) => res.json())
-			.then((response) => {
-				console.log(response)
-				const accessToken = response?.data?.accessToken;
-				const roles = response?.data?.roles;
-				console.log(accessToken, roles)
-				// setAuth({
-				// 	user,
-				// 	pwd,
-				// 	roles,
-				// 	accessToken
-				// });
-
-				setSuccess(true);
-			})
-			.catch((err) => {
-				console.log("Error: ", err);
+		try {
+			const response = await fetch(SERVER_URL + LOGIN_URL, {
+				method: "POST",
+				body: JSON.stringify(userCredentials),
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: 'include'
 			});
+
+			if (response.status === 200) {
+				const res = await response.json();
+				const accessToken = res?.data?.accessToken;
+				const roles = res?.data?.roles;
+
+				setAuth({
+					user,
+					pwd,
+					roles,
+					accessToken
+				});
+
+				console.log(accessToken, roles)
+				setSuccess(true);
+			} else if (response.status === 401) {
+				throw new Error('Username or password incorrect.');
+			} else {
+				throw new Error('Unknown error.')
+			}
+
+		} catch (err) {
+			console.log(err);
+			setErrorMsg("Incorrect username or password");
+			setError(true);
+		}
 
 	};
 
@@ -95,9 +105,10 @@ export const LoginForm = () => {
 				</section>
 			) : (
 				<form className="login__form" onSubmit={handleSubmit}>
-					<p ref={errRef} className={errMsg ? "show" : "hide"}>
-						{errMsg}
+					<p ref={errRef} className={`login__error-msg ${error ? "show" : "hide"}`}>
+						{errorMsg}
 					</p>
+
 					<h1>Login</h1>
 					<label className="login__form__label" htmlFor="username">
 						{validUser ? (

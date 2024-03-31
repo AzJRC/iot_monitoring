@@ -1,10 +1,11 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require('path');
 const fs = require("fs");
+const bcrypt = require('bcrypt');
 
 const DB_NAME = "tmp-db.db"
 const DB_PATH = path.resolve(__dirname, "model", DB_NAME);
-console.log(DB_PATH)
+
 
 // Check if the database file exists, and create it if it doesn't
 if (!fs.existsSync(DB_PATH)) {
@@ -31,28 +32,40 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users'", (er
     console.error("Error checking for table existence:", err.message);
     return;
   }
-  
+
   if (!row) {
     // Table does not exist, create it
     db.run(`CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user TEXT NOT NULL UNIQUE,
-        pwd TEXT NOT NULL
+        pwd TEXT NOT NULL,
+        roles TEXT NOT NULL,
+        refresh_token TEXT
       )`, (err) => {
       if (err) {
         console.error("Error creating table:", err.message);
         return;
       }
       console.log("Users table has been created.");
-      
+
       // Insert initial admin user
-      db.run(`INSERT INTO users (user, pwd) VALUES ('admin', 'admin')`, (err) => {
+      bcrypt.hash('admin', 10, (err, hashedPwd) => {
         if (err) {
-          console.error("Error inserting initial admin user:", err.message);
+          console.error("Error hashing password:", err.message);
           return;
         }
-        console.log("Defaut user has been created.");
+
+        // Insert the initial admin user with the hashed password
+        db.run(`INSERT INTO users (user, pwd, roles, refresh_token) VALUES ('admin', ?, 'administrator', NULL)`, [hashedPwd], (err) => {
+          if (err) {
+            console.error("Error inserting initial admin user:", err.message);
+            return;
+          }
+          console.log("Default user has been created.");
+        });
       });
+
+
     });
   } else {
     // Check if admin user exists
@@ -63,12 +76,20 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users'", (er
       }
       if (!row) {
         // Admin user doesn't exist, insert it
-        db.run(`INSERT INTO users (user, pwd) VALUES ('admin', 'admin')`, (err) => {
+        bcrypt.hash('admin', 10, (err, hashedPwd) => {
           if (err) {
-            console.error("Error inserting initial admin user:", err.message);
+            console.error("Error hashing password:", err.message);
             return;
           }
-          console.log("Defaut user has been created.");
+
+          // Insert the initial admin user with the hashed password
+          db.run(`INSERT INTO users (user, pwd, roles, refresh_token) VALUES ('admin', ?, 'administrator', NULL)`, [hashedPwd], (err) => {
+            if (err) {
+              console.error("Error inserting initial admin user:", err.message);
+              return;
+            }
+            console.log("Default user has been created.");
+          });
         });
       }
     });

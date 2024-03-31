@@ -1,3 +1,11 @@
+.show {
+    display: flex;
+}
+
+.hide {
+    display: none;
+}
+
 .login__form {
     display: flex;
     flex-direction: column;
@@ -10,6 +18,12 @@
     align-items: center;
     justify-content: end;
     font-size: 1.2rem;
+}
+
+.login__error-msg {
+    position: absolute;
+    top: 10%;
+    left: 5%;
 }
 
 .login__form__input {
