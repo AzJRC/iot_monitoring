@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
+import { HiPencilAlt } from "react-icons/hi";
 import "./topnavbar.css";
 
 const TopNavbar = ({
@@ -14,10 +15,8 @@ const TopNavbar = ({
             <span className='top-navbar__span__manu-icon'>
                 <GiHamburgerMenu className='top-navbar__menu-icon' onClick={toggleSidebarVisibility} />
             </span>
-            {
-                !isSidebarVisible && (<h1 className='top-navbar__title'>{dashboard_dynamic_title}</h1>)
-            }
-
+            <h1 className='top-navbar__title'>{dashboard_dynamic_title}</h1>
+            <HiPencilAlt className='top-navbar__edit-icon' onClick={() => { }} />
         </nav>
     )
 }

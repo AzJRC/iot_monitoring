@@ -1,0 +1,20 @@
+.sidebar__option {
+    list-style: none;
+    margin-left: 2rem;
+    padding: 0.5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: transparent;
+    color: white;
+    border: none;
+}
+
+.sidebar__option * {
+    margin-right: 0.5rem;
+}
+
+.sidebar__option svg {
+    font-size: 1.2rem;
+}
