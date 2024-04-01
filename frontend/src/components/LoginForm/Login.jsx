@@ -2,8 +2,8 @@ import { useRef, useEffect, useState, useContext } from "react";
 import AuthContext from "../../contexts/AuthProvider";
 import { FaCheck } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
-import "./login.css";
 import { SERVER_URL } from "../../api/backend_api";
+import "./login.css";
 
 const LOGIN_URL = '/auth';
 
@@ -16,7 +16,6 @@ export const LoginForm = () => {
 	//	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[&/$!])[a-zA-Z0-9&/$!]{8,32}$/;
 
 	const userRef = useRef();
-	const errRef = useRef();
 
 	const [user, setUser] = useState("");
 	const [validUser, setValidUser] = useState(false);
@@ -105,7 +104,7 @@ export const LoginForm = () => {
 				</section>
 			) : (
 				<form className="login__form" onSubmit={handleSubmit}>
-					<p ref={errRef} className={`login__error-msg ${error ? "show" : "hide"}`}>
+					<p className={`login__error-msg ${error ? "show" : "hide"}`}>
 						{errorMsg}
 					</p>
 

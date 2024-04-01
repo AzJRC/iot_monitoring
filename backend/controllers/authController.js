@@ -11,21 +11,14 @@ const handleAuthentication = async (req, res) => {
 			.json({ message: "Username and password are required." });
 	}
 
-	const hashedPwd = await bcrypt.hash(pwd, 10);
-
 	db.get("SELECT * FROM users WHERE user = $user", user, async (err, row) => {
 		if (err) {
-			console.error(err.message);
-			return res.status(500).json({ error: err.message });
+			return res.status(500);
 		}
 
 		// If no rows found, user does not exist
-		if (!row || row.length === 0) {
-			return res.status(401).json({ error: "User or password incorrect" });
-		}
-
 		const match = await bcrypt.compare(pwd, row.pwd);
-		if (!match) {
+		if (!row || !match) {
 			return res.status(401).json({ error: "User or password incorrect" });
 		}
 
