@@ -1,20 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Dashboard from "../../components/Dashboard/Dashboard";
-import LeftNavbar from "../../components/LeftNavbar/LeftNavbar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import TopNavbar from "../../components/TopNavbar/TopNavbar";
 import "./dashboard_layout.css"
 
 function DashboardLayout() {
-  const [isLeftNavbarVisible, setIsLeftNavbarVisible] = useState(false);
-  const leftNavbarRef = useRef(null);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const SidebarRef = useRef(null);
 
-  const toggleLeftNavbarVisibility = () => {
-    setIsLeftNavbarVisible(!isLeftNavbarVisible);
+  const toggleSidebarVisibility = () => {
+    setIsSidebarVisible(!isSidebarVisible);
   };
 
   /* Refactor this with Refs */
   useEffect(() => {
-    const leftNavbar = document.querySelector('.dashboard__left-navbar');
+    const Sidebar = document.querySelector('.dashboard__sidebar');
     const lastParent = document.querySelector('.dashboard-layout');
     const HambBtnSection = document.querySelector('.top-navbar__span__manu-icon');
 
@@ -27,11 +27,11 @@ function DashboardLayout() {
         parent = parent.parentNode;
       }
 
-      if (clickedElementProgressiveParents.indexOf(leftNavbar) === -1) {
-        if (e.target.className === 'dashboard__left-navbar') {
+      if (clickedElementProgressiveParents.indexOf(Sidebar) === -1) {
+        if (e.target.className === 'dashboard__sidebar') {
           return;
         }
-        if (clickedElementProgressiveParents.indexOf(HambBtnSection) === -1) setIsLeftNavbarVisible(false);
+        if (clickedElementProgressiveParents.indexOf(HambBtnSection) === -1) setIsSidebarVisible(false);
       }
     };
 
@@ -43,11 +43,15 @@ function DashboardLayout() {
   }, []);
 
   return (
-    <main className={`dashboard-layout ${isLeftNavbarVisible ? 'dashboard-layout__two-columns' : 'dashboard-layout__one-columns'}`}>
-      <TopNavbar toggleLeftNavbarVisibility={toggleLeftNavbarVisibility} isLeftNavbarVisible={isLeftNavbarVisible} />
-      <LeftNavbar ref={leftNavbarRef} isLeftNavbarVisible={isLeftNavbarVisible} />
-      <Dashboard />
-    </main>
+    <>
+      <aside>
+        <Sidebar ref={SidebarRef} isSidebarVisible={isSidebarVisible} />
+      </aside>
+      <main className={`dashboard-layout ${isSidebarVisible ? 'dashboard-layout__two-columns' : 'dashboard-layout__one-columns'}`}>
+        <TopNavbar toggleSidebarVisibility={toggleSidebarVisibility} isSidebarVisible={isSidebarVisible} />
+        <Dashboard />
+      </main>
+    </>
   )
 }
 

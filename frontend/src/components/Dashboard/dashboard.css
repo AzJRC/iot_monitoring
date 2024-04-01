@@ -1,4 +1,11 @@
 .dashboard__main-section {
-    margin: 0.5rem;
-    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 0.1rem;
+    grid-row-gap: 0.1rem;
+    width: 100%;
+    height: calc(100% - 5rem);
+    position: relative;
+    top: 5rem;
 }
