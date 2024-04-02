@@ -6,7 +6,7 @@ import "./registation.css";
 
 const LOGIN_URL = '/auth';
 
-export const RegistrationForm = () => {
+const RegistrationForm = () => {
 	const { setAuth } = useContext(AuthContext);
 
 	const USER_REGEX = /^(?=.*[a-zA-Z])[a-zA-Z0-9&/$!]{4,25}$/;
@@ -72,35 +72,35 @@ export const RegistrationForm = () => {
 	/* Haddle submit of user registration */
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-	  
+
 		fetch(LOGIN_URL, {
 			method: "POST",
 			body: JSON.stringify(data),
 			headers: {
-			  "Content-Type": "application/json",
+				"Content-Type": "application/json",
 			},
 			credentials: 'include'
-		  })
-		  .then((res) => res.json())
-		  .then((response) => {
-			// Inside this block, you have access to the response data
-			console.log("Success: ", response);
-	  
-			const accessToken = response?.data?.accessToken;
-			const roles = response?.data?.roles; /* List */
-			setAuth({
-			  user,
-			  pwd,
-			  roles,
-			  accessToken
+		})
+			.then((res) => res.json())
+			.then((response) => {
+				// Inside this block, you have access to the response data
+				console.log("Success: ", response);
+
+				const accessToken = response?.data?.accessToken;
+				const roles = response?.data?.roles; /* List */
+				setAuth({
+					user,
+					pwd,
+					roles,
+					accessToken
+				});
+
+				setSuccess(true);
+			})
+			.catch((err) => {
+				console.log("Error: ", err);
 			});
-	  
-			setSuccess(true);
-		  })
-		  .catch((err) => {
-			console.log("Error: ", err);
-		  });
-	  };
+	};
 
 	return (
 		<>
@@ -163,10 +163,10 @@ export const RegistrationForm = () => {
 						required
 						onChange={(e) => setAgainPwd(e.target.value)}
 					/>
-					<button 
-						className="form__btn" 
-						disabled={ (validUser && pwdMatch && validPwd) ? 
-							false : 
+					<button
+						className="form__btn"
+						disabled={(validUser && pwdMatch && validPwd) ?
+							false :
 							true}
 					>
 						Register
@@ -176,3 +176,5 @@ export const RegistrationForm = () => {
 		</>
 	);
 };
+
+export default RegistrationForm;

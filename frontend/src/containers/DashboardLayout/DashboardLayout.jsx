@@ -47,10 +47,10 @@ function DashboardLayout() {
       <aside>
         <Sidebar ref={SidebarRef} isSidebarVisible={isSidebarVisible} />
       </aside>
-      <main className={`dashboard-layout ${isSidebarVisible ? 'dashboard-layout__two-columns' : 'dashboard-layout__one-columns'}`}>
+      <section className={`dashboard-layout ${isSidebarVisible ? 'dashboard-layout__two-columns' : 'dashboard-layout__one-columns'}`}>
         <TopNavbar toggleSidebarVisibility={toggleSidebarVisibility} isSidebarVisible={isSidebarVisible} />
         <Dashboard />
-      </main>
+      </section>
     </>
   )
 }
