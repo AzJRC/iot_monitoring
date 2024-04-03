@@ -7,7 +7,7 @@ import "./topnavbar.css";
 const TopNavbar = ({
     isSidebarVisible,
     toggleSidebarVisibility,
-    dashboard_dynamic_title = "MQTT Monitor"
+    dashboard_dynamic_title = "Monitor Aplication"
 }) => {
 
     return (

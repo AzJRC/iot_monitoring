@@ -5,10 +5,10 @@ const verifyJWT = require('./middlewares/verifyJWT.js')
 const credentials = require('./middlewares/credentials.js')
 const corsOptions = require('./config/corsOptions.js')
 const cors = require("cors");
+const config = require("./misc/confParser.js")
 
-/* Load sensitive configuration parameters from JSON file */
-const CONF_FILE = JSON.parse(fs.readFileSync("conf.json", "utf8"));
-const SERVER_PORT = CONF_FILE.SERVER_PORT;
+/* MQTT Client */
+require('./monitor/mqttClient.js');
 
 /* Start Express Web Server */
 const app = express();
@@ -28,10 +28,17 @@ app.use('/logout', require('./routes/logout.js'));
 /* routes that require authentication */
 app.use(verifyJWT);
 app.get('/testauth', (req, res) => {res.sendStatus(200);}) /* temporary */
+
 app.use('/refresh', require('./routes/refresh.js'));
+
+app.use('/devices', require('./routes/devices.js'));
+// app.use('/data') /* (TODO) MQTT -> POST, Browser -> GET */
+
+/* Run mosquitto client */
+
 
 
 /* Run Express Listener */
-app.listen(SERVER_PORT, () => {
-	console.log("Server started at port " + SERVER_PORT);
+app.listen(config.SERVER_PORT, () => {
+	console.log("Server started at port " + config.SERVER_PORT);
 });

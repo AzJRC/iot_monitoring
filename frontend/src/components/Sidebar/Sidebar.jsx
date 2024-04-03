@@ -16,7 +16,7 @@ const Sidebar = forwardRef(
 
         return (
             <nav ref={ref} className={`dashboard__sidebar ${isSidebarVisible ? 'sidebar__opened' : 'sidebar__hidden'}`}>
-                <h1 className='sidebar__title'>MQTT Monitor</h1>
+                <h1 className='sidebar__title'>Monitor App</h1>
                 {options.map((option, index) => (
                     <SidebarOptions key={index} reactIcon={option[0]} optionTitle={option[1]} />
                 ))}
