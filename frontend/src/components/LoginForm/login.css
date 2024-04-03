@@ -10,7 +10,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: start;
+    align-items: center;
+    width: 50%;
 }
 
 .login__form__label {
@@ -36,7 +37,7 @@
 }
 
 .form__btn {
-    width: 100%;
+    width: 50%;
     margin: 0.5rem 0;
     padding: 0.5rem 0;
     font-size: 1.2rem;

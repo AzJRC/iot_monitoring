@@ -1,7 +1,6 @@
 .sidebar__option {
     list-style: none;
-    margin-left: 2rem;
-    padding: 0.5rem 0;
+    padding: 0.5rem 2rem;
     width: 100%;
     display: flex;
     justify-content: flex-start;
@@ -11,9 +10,16 @@
     border: none;
 }
 
+.sidebar__option:hover,
+.sidebar__option.selected {
+    background-color: rgb(29, 29, 29);
+}
+
+
 .sidebar__option * {
     margin-right: 0.5rem;
 }
+
 
 .sidebar__option svg {
     font-size: 1.2rem;

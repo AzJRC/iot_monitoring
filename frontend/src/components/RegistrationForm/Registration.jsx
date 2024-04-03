@@ -4,7 +4,7 @@ import { FaCheck } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 import "./registation.css";
 
-const LOGIN_URL = '/auth';
+const registration_URL = '/auth';
 
 const RegistrationForm = () => {
 	const { setAuth } = useContext(AuthContext);
@@ -73,7 +73,7 @@ const RegistrationForm = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		fetch(LOGIN_URL, {
+		fetch(registration_URL, {
 			method: "POST",
 			body: JSON.stringify(data),
 			headers: {
@@ -108,56 +108,56 @@ const RegistrationForm = () => {
 				<section>
 					<h1>Sucessful register</h1>
 					<p>
-						<a href="#" className="login__link">Login</a>
+						<a href="#" className="registration__link">registration</a>
 					</p>
 				</section>
 			) : (
-				<form className="login__form" onSubmit={handleSubmit}>
+				<form className="registration__form" onSubmit={handleSubmit}>
 					<p ref={errRef} className={errMsg ? "show" : "hide"}>
 						{errMsg}
 					</p>
 					<h1>New user</h1>
-					<label className="login__form__label" htmlFor="username">
+					<label className="registration__form__label" htmlFor="username">
 						{validUser ? (
-							<FaCheck className="login__label__icon" />
+							<FaCheck className="registration__label__icon" />
 						) : (
-							<RxCross1 className="login__label__icon" />
+							<RxCross1 className="registration__label__icon" />
 						)}
 						Username
 					</label>
 					<input
 						ref={userRef}
-						className="login__form__input"
+						className="registration__form__input"
 						type="text"
 						id="username"
 						required
 						onChange={(e) => setUser(e.target.value)}
 					/>
-					<label className="login__form__label" htmlFor="password">
+					<label className="registration__form__label" htmlFor="password">
 						{validPwd ? (
-							<FaCheck className="login__label__icon" />
+							<FaCheck className="registration__label__icon" />
 						) : (
-							<RxCross1 className="login__label__icon" />
+							<RxCross1 className="registration__label__icon" />
 						)}
 						Password
 					</label>
 					<input
-						className="login__form__input"
+						className="registration__form__input"
 						type="password"
 						id="password"
 						required
 						onChange={(e) => setPwd(e.target.value)}
 					/>
-					<label className="login__form__label" htmlFor="password_again">
+					<label className="registration__form__label" htmlFor="password_again">
 						{validAgainPwd && pwdMatch ? (
-							<FaCheck className="login__label__icon" />
+							<FaCheck className="registration__label__icon" />
 						) : (
-							<RxCross1 className="login__label__icon" />
+							<RxCross1 className="registration__label__icon" />
 						)}
 						Password (again)
 					</label>
 					<input
-						className="login__form__input"
+						className="registration__form__input"
 						type="password"
 						id="password_again"
 						required

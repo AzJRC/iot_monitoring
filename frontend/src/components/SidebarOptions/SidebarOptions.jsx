@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./sidebar_options.css";
-import { FaRegArrowAltCircleRight } from "react-icons/fa";
 
-const SidebarOptions = ({ reactIcon, optionTitle }) => {
+const SidebarOptions = ({ reactIcon, optionTitle, data, cb, isSelected }) => {
 
-    /* TODO select option and open sub menu */
-    const [isSelected, setIsSelected] = useState(null)
+    const handleButtonClicked = (e) => {
+        cb(e.currentTarget.dataset.btnFunc)
+    }
 
     return (
-        <button className={`sidebar__option`}>
-            {isSelected && (<FaRegArrowAltCircleRight />)}
+        <button
+            className={`sidebar__option ${isSelected ? 'selected' : ''}`}
+            data-btn-func={data}
+            onClick={handleButtonClicked}
+        >
             {reactIcon}
             <p>{optionTitle}</p>
         </button>
