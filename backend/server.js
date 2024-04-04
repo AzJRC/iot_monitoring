@@ -7,9 +7,6 @@ const corsOptions = require('./config/corsOptions.js')
 const cors = require("cors");
 const config = require("./misc/confParser.js")
 
-/* MQTT Client */
-require('./monitor/mqttClient.js');
-
 /* Start Express Web Server */
 const app = express();
 
@@ -34,8 +31,9 @@ app.use('/refresh', require('./routes/refresh.js'));
 app.use('/devices', require('./routes/devices.js'));
 // app.use('/data') /* (TODO) MQTT -> POST, Browser -> GET */
 
-/* Run mosquitto client */
 
+/* MQTT Client */
+require('./monitor/mqttClient.js');
 
 
 /* Run Express Listener */

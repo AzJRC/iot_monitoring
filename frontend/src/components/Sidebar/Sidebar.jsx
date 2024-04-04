@@ -1,16 +1,13 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import SidebarOptions from './../SidebarOptions/SidebarOptions';
 import "./sidebar.css";
-import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
-import { MdOutlineChangeHistory } from "react-icons/md";
 import { MdSpaceDashboard } from "react-icons/md";
+import { TbDeviceComputerCamera } from "react-icons/tb"
 
 // Sidebar options
 const options = [
-    { icon: <MdSpaceDashboard />, title: "Dashboard", data: "dashb" },
-    { icon: <IoMdAddCircleOutline />, title: "Add device", data: "add" },
-    { icon: <IoMdRemoveCircleOutline />, title: "Remove device", data: "rmv" },
-    { icon: <MdOutlineChangeHistory />, title: "Edit device", data: "edit" }
+    { icon: <MdSpaceDashboard />, title: "Panel", data: "panel" },
+    { icon: <TbDeviceComputerCamera />, title: "Devices", data: "devices" },
 ];
 
 const Sidebar = forwardRef(({ isSidebarVisible, selectedOption, onOptionClick }, ref) => {

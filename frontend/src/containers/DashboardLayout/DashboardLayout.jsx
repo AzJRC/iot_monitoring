@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Dashboard from "../../components/Dashboard/Dashboard";
+import PanelWindow from "../../components/PanelWindow/PanelWindow";
+import DevicesWindow from '../../components/DevicesWindow/DevicesWindow';
 import Sidebar from "../../components/Sidebar/Sidebar";
 import TopNavbar from "../../components/TopNavbar/TopNavbar";
 import "./dashboard_layout.css"
@@ -45,11 +46,26 @@ function DashboardLayout() {
 
 
 	/* Selected option logic */
-
-	const [selectedOption, setSelectedOption] = useState("dashb");
+	const [selectedOption, setSelectedOption] = useState("panel");
 	const handleOptionClick = (data) => {
 		setSelectedOption(data);
 	};
+
+
+	const displayWindow = () => {
+		switch (selectedOption) {
+			case 'panel':
+				return (
+					<PanelWindow />
+				)
+				
+			case 'devices':
+				return (
+					<DevicesWindow />
+				)
+
+		}
+	}
 
 
 	return (
@@ -59,7 +75,7 @@ function DashboardLayout() {
 			</aside>
 			<section className={`dashboard-layout`}>
 				<TopNavbar toggleSidebarVisibility={toggleSidebarVisibility} isSidebarVisible={isSidebarVisible} />
-				<Dashboard selectedOption={selectedOption} />
+				{displayWindow()}
 			</section>
 		</>
 	)

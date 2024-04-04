@@ -1,18 +1,20 @@
 const db = require("../database.js");
 
 module.exports.addDeviceController = async (req, res) => {
+	
 	const {
-		hostname,
-		description,
-		subscribe_topic,
-		publish_topic,
-		net_ssid,
-		net_pwd,
+		deviceHostname,
+		deviceDescription,
+		deviceMQTTSubTopic,
+		deviceMQTTPubTopic,
+		deviceMQTTUser,
+		deviceMQTTPwd
 	} = req.body;
+
 
 	db.get(
 		"SELECT * FROM devices WHERE hostname = $hostname",
-		hostname,
+		deviceHostname,
 		async (err, row) => {
 			if (err) return res.sendStatus(500);
 			if (row) return res.status(403).json("This device already exists.");
@@ -21,22 +23,21 @@ module.exports.addDeviceController = async (req, res) => {
 				`INSERT INTO devices (hostname, description, subscribe_topic, publish_topic, net_ssid, net_pwd)
                 VALUES ($hostname, $description, $subscribe_topic, $publish_topic, $net_ssid, $net_pwd)`,
 				[
-					hostname,
-					description,
-					subscribe_topic,
-					publish_topic,
-					net_ssid,
-					net_pwd,
+					deviceHostname,
+					deviceDescription,
+					deviceMQTTSubTopic,
+					deviceMQTTPubTopic,
+					deviceMQTTUser,
+					deviceMQTTPwd,
 				],
 				(err) => {
-					console.log(err); /* TEMP */
-					return res.sendStatus(500);
+					if (err) return res.status(500).json(err)
 				}
 			);
-
-			return res.json("Device added successfully!");
 		}
 	);
+
+	return res.json("Device added successfully!");
 };
 
 module.exports.updateDeviceController = async (req, res) => {

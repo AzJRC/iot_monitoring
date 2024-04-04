@@ -117,6 +117,7 @@ const LoginForm = () => {
 				required
 				onChange={(e) => setUser(e.target.value)}
 			/>
+
 			<label className="login__form__label" htmlFor="password">
 				{validPwd ? (
 					<FaCheck className="login__label__icon" />
@@ -132,6 +133,7 @@ const LoginForm = () => {
 				required
 				onChange={(e) => setPwd(e.target.value)}
 			/>
+			
 			<button
 				className="form__btn"
 				disabled={(validUser && validPwd) ?

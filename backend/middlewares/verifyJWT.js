@@ -13,12 +13,12 @@ const verifyJWT = (req, res, next) => {
 	});
 
 	/* Verify access token */
-	const authHeader = req.headers["authorization"];
-	if (!authHeader) return res.sendStatus(403);
-	const token = authHeader.split(" ")[1];
-	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-		if (err) return res.sendStatus(403);
-	});
+	// const authHeader = req.headers["authorization"];
+	// if (!authHeader) return res.json('No authenticated').status(401);
+	// const token = authHeader.split(" ")[1];
+	// jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+	// 	if (err) return res.json('invalid token').status(403);
+	// });
 
 	next();
 };
