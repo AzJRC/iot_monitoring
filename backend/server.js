@@ -21,16 +21,13 @@ app.use(cookieParser());
 /* routes */
 app.use('/auth', require('./routes/auth.js'));
 app.use('/logout', require('./routes/logout.js'));
+app.use('/refresh', require('./routes/refresh.js'));
 
 
 /* routes that require authentication */
 app.use(verifyJWT);
 app.get('/testauth', (req, res) => {res.sendStatus(200);}) /* temporary */
-
-app.use('/refresh', require('./routes/refresh.js'));
-
 app.use('/devices', require('./routes/devices.js'));
-// app.use('/data') /* (TODO) MQTT -> POST, Browser -> GET */
 
 
 /* MQTT Client */

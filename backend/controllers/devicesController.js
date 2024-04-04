@@ -7,8 +7,6 @@ module.exports.addDeviceController = async (req, res) => {
 		deviceDescription,
 		deviceMQTTSubTopic,
 		deviceMQTTPubTopic,
-		deviceMQTTUser,
-		deviceMQTTPwd
 	} = req.body;
 
 
@@ -17,24 +15,22 @@ module.exports.addDeviceController = async (req, res) => {
 		deviceHostname,
 		async (err, row) => {
 			if (err) return res.sendStatus(500);
-			if (row) return res.json("This device already exists.").status(403);
+			if (row) return res.status(403).json("This device already exists.");
 
 			db.run(
-				`INSERT INTO devices (hostname, description, subscribe_topic, publish_topic, net_ssid, net_pwd)
-                VALUES ($hostname, $description, $subscribe_topic, $publish_topic, $net_ssid, $net_pwd)`,
+				`INSERT INTO devices (hostname, description, subscribe_topic, publish_topic)
+                VALUES ($hostname, $description, $subscribe_topic, $publish_topic)`,
 				[
 					deviceHostname,
 					deviceDescription,
 					deviceMQTTSubTopic,
-					deviceMQTTPubTopic,
-					deviceMQTTUser,
-					deviceMQTTPwd,
+					deviceMQTTPubTopic
 				],
 				(err) => {
-					if (err) return res.json(err).status(500)
+					if (err) return res.status(500).json(err);
 				}
 			);
-			return res.json("Device added successfully!").status(200);
+			return res.status(200).json("Device added successfully!");
 		}
 	);
 };

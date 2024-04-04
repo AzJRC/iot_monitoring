@@ -128,9 +128,7 @@ db.get(
 				hostname TEXT NOT NULL UNIQUE,
 				description TEXT,
 				subscribe_topic TEXT NOT NULL,
-				publish_topic TEXT NOT NULL,
-				net_ssid TEXT,
-				net_pwd TEXT 
+				publish_topic TEXT NOT NULL
 				)`,
 				(err) => {
 					if (err) {

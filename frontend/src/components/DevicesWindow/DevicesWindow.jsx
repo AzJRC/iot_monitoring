@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../api/backend_api";
 import "./devices_window.css";
-import useRefreshToken from "../../hooks/useRefresh";
-
 import useAuth from "../../hooks/useAuth";
-import AuthContext from './../../contexts/AuthProvider';
-
-
+import useRefreshToken from "./../../hooks/useRefresh";
 
 const DEVICE_ADD_ROUTE = '/devices/add'
 
 const DevicesWindow = () => {
 
 	const { auth } = useAuth();
-	const refresh = useRefreshToken()
+	const refresh = useRefreshToken();
 
 	const [deviceHostname, setDeviceHostname] = useState("");
 	const [deviceDescription, setDeviceDescription] = useState("");
@@ -31,7 +27,7 @@ const DevicesWindow = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const newDevice = { deviceHostname, deviceDescription, deviceInterfaces, deviceMQTTSubTopic, deviceMQTTPubTopic, deviceMQTTUser, deviceMQTTPwd };
+		const newDevice = { deviceHostname, deviceDescription, deviceInterfaces, deviceMQTTSubTopic, deviceMQTTPubTopic };
 
 		try {
 			const accessToken = auth.accessToken;
@@ -45,12 +41,17 @@ const DevicesWindow = () => {
 				credentials: 'include'
 			});
 
+			const res = await response.json();
 			if (response.status === 200) {
-				const res = await response.json();
 				console.log(res);
 
+			} else if (response.status === 403) {
+				console.log(res);
+
+
 			} else {
-				console.log(response);
+				console.log(res);
+
 			}
 
 		} catch (err) {
@@ -152,38 +153,6 @@ const DevicesWindow = () => {
 							onChange={(e) => { setdeviceMQTTPubTopic(e.target.value) }}
 						/>
 					</fieldset>
-					{/* InputLabel 6 */}
-					<fieldset className="device-window__form__fieldset no-border">
-						<label
-							htmlFor="device-window__form__ssid"
-							className="device-window__form__label"
-						>
-							User
-						</label>
-						<input
-							type="text"
-							className="devices-window__form__input"
-							id="device-window__form__ssid"
-							autoComplete='false'
-							onChange={(e) => { setdeviceMQTTUser(e.target.value) }}
-						/>
-					</fieldset>
-					{/* InputLabel 7 */}
-					<fieldset className="device-window__form__fieldset no-border">
-						<label
-							htmlFor="device-window__form__pwd"
-							className="device-window__form__label"
-						>
-							Pwd
-						</label>
-						<input
-							type="text"
-							className="devices-window__form__input"
-							id="device-window__form__pwd"
-							autoComplete='false'
-							onChange={(e) => { setdeviceMQTTPwd(e.target.value) }}
-						/>
-					</fieldset>
 					<button
 						className="device-window__form__btn"
 					>
@@ -194,6 +163,7 @@ const DevicesWindow = () => {
 
 			<section className="devices-window__subsection devices-window__list-devices-section">
 				<h1 className="devices-window__subsection-title">Devices (TODO)</h1>
+				<button onClick={() => refresh()}>refresh</button>
 			</section>
 		</section>
 	);
