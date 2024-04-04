@@ -7,15 +7,16 @@ const corsOptions = require('./config/corsOptions.js')
 const cors = require("cors");
 const config = require("./misc/confParser.js")
 
-/* Start Express Web Server */
+/* Start Expre..
+ss Web Server */
 const app = express();
 
 /* middlewares */
 app.use(credentials)
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.json());
+app.use(cookieParser());
 
 /* routes */
 app.use('/auth', require('./routes/auth.js'));

@@ -17,7 +17,7 @@ module.exports.addDeviceController = async (req, res) => {
 		deviceHostname,
 		async (err, row) => {
 			if (err) return res.sendStatus(500);
-			if (row) return res.status(403).json("This device already exists.");
+			if (row) return res.json("This device already exists.").status(403);
 
 			db.run(
 				`INSERT INTO devices (hostname, description, subscribe_topic, publish_topic, net_ssid, net_pwd)
@@ -31,13 +31,12 @@ module.exports.addDeviceController = async (req, res) => {
 					deviceMQTTPwd,
 				],
 				(err) => {
-					if (err) return res.status(500).json(err)
+					if (err) return res.json(err).status(500)
 				}
 			);
+			return res.json("Device added successfully!").status(200);
 		}
 	);
-
-	return res.json("Device added successfully!");
 };
 
 module.exports.updateDeviceController = async (req, res) => {

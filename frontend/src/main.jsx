@@ -7,12 +7,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
-		<BrowserRouter >
-			<AuthProvider>
+		<AuthProvider>
+			<BrowserRouter >
 				<Routes>
 					<Route path="/*" element={<App />}></Route>
 				</Routes>
-			</AuthProvider>
-		</BrowserRouter>
+			</BrowserRouter>
+		</AuthProvider>
 	</React.StrictMode>
 );

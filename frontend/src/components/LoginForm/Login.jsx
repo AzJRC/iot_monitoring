@@ -1,6 +1,6 @@
 import useAuth from "./../../hooks/useAuth";
 import { useRef, useEffect, useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaCheck } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 import { SERVER_URL } from "../../api/backend_api";
@@ -72,6 +72,8 @@ const LoginForm = () => {
 				const accessToken = res?.data?.accessToken;
 				const roles = res?.data?.roles;
 
+				console.log(res);
+
 				setAuth({
 					user,
 					pwd,
@@ -133,7 +135,7 @@ const LoginForm = () => {
 				required
 				onChange={(e) => setPwd(e.target.value)}
 			/>
-			
+
 			<button
 				className="form__btn"
 				disabled={(validUser && validPwd) ?

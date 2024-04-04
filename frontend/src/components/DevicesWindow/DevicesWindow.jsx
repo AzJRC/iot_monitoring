@@ -1,47 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../api/backend_api";
 import "./devices_window.css";
-import useRefreshToken from "../../hooks/useRefresh"; 
+import useRefreshToken from "../../hooks/useRefresh";
+
+import useAuth from "../../hooks/useAuth";
+import AuthContext from './../../contexts/AuthProvider';
+
+
 
 const DEVICE_ADD_ROUTE = '/devices/add'
 
 const DevicesWindow = () => {
 
-  const refresh = useRefreshToken()
+	const { auth } = useAuth();
+	const refresh = useRefreshToken()
 
-  const [deviceHostname, setDeviceHostname] = useState("");
-  const [deviceDescription, setDeviceDescription] = useState("");
-  const [deviceInterfaces, setDeviceInterfaces] = useState({});
-  const [deviceMQTTSubTopic, setdeviceMQTTSubTopic] = useState('');
-  const [deviceMQTTPubTopic, setdeviceMQTTPubTopic] = useState('');
-  const [deviceMQTTUser, setdeviceMQTTUser] = useState('');
-  const [deviceMQTTPwd, setdeviceMQTTPwd] = useState('');
+	const [deviceHostname, setDeviceHostname] = useState("");
+	const [deviceDescription, setDeviceDescription] = useState("");
+	const [deviceInterfaces, setDeviceInterfaces] = useState({});
+	const [deviceMQTTSubTopic, setdeviceMQTTSubTopic] = useState('');
+	const [deviceMQTTPubTopic, setdeviceMQTTPubTopic] = useState('');
+	const [deviceMQTTUser, setdeviceMQTTUser] = useState('');
+	const [deviceMQTTPwd, setdeviceMQTTPwd] = useState('');
 
-  const handleCheckbox = async (e) => {
-    const inter = e.target.attributes["data-inter"].value;
-    const interActive = e.target.checked
-    setDeviceInterfaces({[inter]: interActive})
-  }
+	const handleCheckbox = async (e) => {
+		const inter = e.target.attributes["data-inter"].value;
+		const interActive = e.target.checked
+		setDeviceInterfaces({ [inter]: interActive })
+	}
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newDevice = {deviceHostname, deviceDescription, deviceInterfaces, deviceMQTTSubTopic, deviceMQTTPubTopic, deviceMQTTUser, deviceMQTTPwd};
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const newDevice = { deviceHostname, deviceDescription, deviceInterfaces, deviceMQTTSubTopic, deviceMQTTPubTopic, deviceMQTTUser, deviceMQTTPwd };
 
-    try {
+		try {
+			const accessToken = auth.accessToken;
 			const response = await fetch(SERVER_URL + DEVICE_ADD_ROUTE, {
 				method: "POST",
 				body: JSON.stringify(newDevice),
 				headers: {
 					"Content-Type": "application/json",
+					"Authorization": "Bearer " + auth.accessToken
 				},
 				credentials: 'include'
 			});
 
 			if (response.status === 200) {
 				const res = await response.json();
-        console.log(res);
-        // Refresh the page after successful response
-        window.location.reload();
+				console.log(res);
 
 			} else {
 				console.log(response);
@@ -50,7 +56,7 @@ const DevicesWindow = () => {
 		} catch (err) {
 			console.log(err);
 		}
-}
+	}
 
 	return (
 		<section className="devices-window__main-section">
@@ -70,10 +76,10 @@ const DevicesWindow = () => {
 							type="text"
 							className="devices-window__form__input"
 							id="device-window__form__hostname"
-              data-interface="mqtt"
+							data-interface="mqtt"
 							required
-              autoComplete='false'
-              onChange={(e) => {setDeviceHostname(e.target.value)}}
+							autoComplete='false'
+							onChange={(e) => { setDeviceHostname(e.target.value) }}
 						/>
 					</fieldset>
 					{/* InputLabel 2 */}
@@ -88,8 +94,8 @@ const DevicesWindow = () => {
 							type="text"
 							className="devices-window__form__input"
 							id="device-window__form__description"
-              autoComplete='false'
-              onChange={(e) => {setDeviceDescription(e.target.value)}}
+							autoComplete='false'
+							onChange={(e) => { setDeviceDescription(e.target.value) }}
 						/>
 					</fieldset>
 					{/* InputLabel 3 */}
@@ -101,8 +107,8 @@ const DevicesWindow = () => {
 								className="devices-window__form__input"
 								id="device-window__form__interface"
 								defaultChecked
-                data-inter='mqtt'
-                onChange={(e) => {handleCheckbox(e)}}
+								data-inter='mqtt'
+								onChange={(e) => { handleCheckbox(e) }}
 							/>
 							<label
 								htmlFor="device-window__form__interface"
@@ -124,9 +130,9 @@ const DevicesWindow = () => {
 							type="text"
 							className="devices-window__form__input"
 							id="device-window__form__subscribe"
-              autoComplete='false'
+							autoComplete='false'
 							required
-              onChange={(e) => {setdeviceMQTTSubTopic(e.target.value)}}
+							onChange={(e) => { setdeviceMQTTSubTopic(e.target.value) }}
 						/>
 					</fieldset>
 					{/* InputLabel 5 */}
@@ -141,9 +147,9 @@ const DevicesWindow = () => {
 							type="text"
 							className="devices-window__form__input"
 							id="device-window__form__publish"
-              autoComplete='false'
+							autoComplete='false'
 							required
-              onChange={(e) => {setdeviceMQTTPubTopic(e.target.value)}}
+							onChange={(e) => { setdeviceMQTTPubTopic(e.target.value) }}
 						/>
 					</fieldset>
 					{/* InputLabel 6 */}
@@ -158,8 +164,8 @@ const DevicesWindow = () => {
 							type="text"
 							className="devices-window__form__input"
 							id="device-window__form__ssid"
-              autoComplete='false'
-              onChange={(e) => {setdeviceMQTTUser(e.target.value)}}
+							autoComplete='false'
+							onChange={(e) => { setdeviceMQTTUser(e.target.value) }}
 						/>
 					</fieldset>
 					{/* InputLabel 7 */}
@@ -174,8 +180,8 @@ const DevicesWindow = () => {
 							type="text"
 							className="devices-window__form__input"
 							id="device-window__form__pwd"
-              autoComplete='false'
-              onChange={(e) => {setdeviceMQTTPwd(e.target.value)}}
+							autoComplete='false'
+							onChange={(e) => { setdeviceMQTTPwd(e.target.value) }}
 						/>
 					</fieldset>
 					<button

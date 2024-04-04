@@ -5,26 +5,24 @@ require("dotenv").config();
 
 const handleAuthentication = async (req, res) => {
 	const { user, pwd } = req.body;
-	if (!user || !pwd) {
-		return res
-			.status(400)
-			.json({ message: "Username and password are required." });
-	}
+	if (!user || !pwd) return res.json({ message: "Credentials are required." }).status(400);
 
 	db.get("SELECT * FROM users WHERE user = $user", user, async (err, row) => {
-		if (err) {
-			return res.status(500);
-		}
+		if (err) return res.sendStatus(500);
 
-		// If no rows found, user does not exist
+		// compare password with password in the database
 		const match = await bcrypt.compare(pwd, row.pwd);
 		if (!row || !match) {
-			return res.status(401).json({ error: "User or password incorrect" });
+			// If no rows found, user does not exist
+			return res.json({ error: "Incorrect credentials" }).status(401);
 		}
 
 		// User found, generate tokens
 		const access_token = jwt.sign(
-			{ username: row.user },
+			{ 
+				"username": row.user,
+				"roles": row.roles
+			},
 			process.env.ACCESS_TOKEN_SECRET,
 			{ expiresIn: "5m" }
 		);
