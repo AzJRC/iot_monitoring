@@ -45,10 +45,9 @@ const DevicesWindow = () => {
 			if (response.status === 200) {
 				console.log(res);
 
-			} else if (response.status === 403) {
-				console.log(res);
-
-
+			} else if (response.status === 401) {
+				refresh();
+				console.log(res)
 			} else {
 				console.log(res);
 

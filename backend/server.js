@@ -31,7 +31,7 @@ app.use('/devices', require('./routes/devices.js'));
 
 
 /* MQTT Client */
-require('./monitor/mqttClient.js');
+
 
 
 /* Run Express Listener */

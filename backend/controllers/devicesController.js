@@ -31,6 +31,7 @@ module.exports.addDeviceController = async (req, res) => {
 				}
 			);
 			return res.status(200).json("Device added successfully!");
+			
 		}
 	);
 };

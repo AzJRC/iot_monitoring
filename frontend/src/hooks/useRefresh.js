@@ -14,10 +14,11 @@ const useRefreshToken = () => {
 
         if (response.status === 200) {
             const res = await response.json();
+
             setAuth(prev => {
-                return { ...prev, accessToken: res.accessToken }
+                return { ...prev, accessToken: res.data.accessToken }
             })
-            return res.accessToken
+            return res.data.accessToken
         }
     }
 
