@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useAuth from "./../../hooks/useAuth";
+import MonitorWindow from "../MonitorWindow/MonitorWindow";
 import useRefreshToken from "../../hooks/useRefresh";
 import { SERVER_URL } from "../../api/backend_api";
 import "./dashboard_page.css";
@@ -8,7 +9,7 @@ function DashboardPage() {
 	const { auth } = useAuth();
 	const [topic, setTopic] = useState("");
 
-    
+
 	const handleSubscription = (event) => {
 		event.preventDefault();
 		fetch(SERVER_URL + "/devices/add", {
@@ -73,6 +74,9 @@ function DashboardPage() {
 			</section>
 			<section className="dashboard-page__section">
 				<h1>Monitor devices</h1>
+                <div>
+                    <MonitorWindow />
+                </div>
 			</section>
 		</>
 	);

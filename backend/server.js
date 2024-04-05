@@ -1,4 +1,3 @@
-const fs = require("fs");
 const express = require("express");
 const cookieParser = require('cookie-parser');
 const verifyJWT = require('./middlewares/verifyJWT.js')
@@ -6,7 +5,6 @@ const credentials = require('./middlewares/credentials.js')
 const corsOptions = require('./config/corsOptions.js')
 const cors = require("cors");
 const config = require("./misc/confParser.js")
-const mqtt = require('mqtt')
 
 /* Start Express Web Server */
 const app = express();
@@ -33,8 +31,13 @@ app.use('/devices', require('./routes/devices.js'));
 /* MQTT Client */
 require("./monitor/mqttClient.js")
 
+/* SocketIO Server */
+require("./monitor/socketClient.js")
+
 
 /* Run Express Listener */
 app.listen(config.SERVER_PORT, () => {
 	console.log("Server started at port " + config.SERVER_PORT);
 });
+
+module.exports = app;

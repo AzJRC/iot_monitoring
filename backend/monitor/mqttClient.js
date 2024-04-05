@@ -8,10 +8,14 @@ mqttClient.on("connect", () => {
 	console.log("Connected to MQTT broker");
 });
 
+let payload = null;
 mqttClient.on('message', function (topic, message) {
-    console.log('Received message:', message.toString(), 'on topic:', topic);
-    // Forward the received message to the frontend
-    // You can use WebSocket, Socket.io, or any other method to push the message to the frontend
+    // console.log('Received message:', message.toString(), 'on topic:', topic);  
+	payload = {topic: topic, message: message.toString()}
 });
 
-module.exports = { mqttClient };
+const getCurrentPayload = () => {
+    return payload;
+}
+
+module.exports = { mqttClient, getCurrentPayload };
