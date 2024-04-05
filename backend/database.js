@@ -122,13 +122,17 @@ db.get(
 
 		if (!row) {
 			// Users table does not exist, create it (TODO: Allow subscribe or publish to several topics)
+			//  CREATE TABLE devices (
+			// 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+			// 	hostname TEXT NOT NULL UNIQUE,
+			// 	description TEXT,
+			// 	subscribe_topic TEXT NOT NULL,
+			// 	publish_topic TEXT NOT NULL
+			// 	)
 			db.run(
 				`CREATE TABLE devices (
 				id INTEGER PRIMARY KEY AUTOINCREMENT,
-				hostname TEXT NOT NULL UNIQUE,
-				description TEXT,
-				subscribe_topic TEXT NOT NULL,
-				publish_topic TEXT NOT NULL
+				subscribe_topic TEXT NOT NULL
 				)`,
 				(err) => {
 					if (err) {

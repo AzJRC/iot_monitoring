@@ -10,9 +10,7 @@ const LOGIN_URL = '/auth';
 
 const LoginForm = () => {
 	const { setAuth } = useAuth();
-	const location = useLocation()
 	const navigate = useNavigate();
-	const from = location?.state?.from?.pathname || '/login'
 
 	const USER_REGEX = /^(?=.*[a-zA-Z])[a-zA-Z0-9&/$!]{4,25}$/;
 	const PWD_REGEX = /^[a-z][a-zA-Z0-9&/$!]{4,32}$/;
@@ -72,8 +70,6 @@ const LoginForm = () => {
 				const accessToken = res?.data?.accessToken;
 				const roles = res?.data?.roles;
 
-				console.log(res);
-
 				setAuth({
 					user,
 					pwd,
@@ -81,7 +77,7 @@ const LoginForm = () => {
 					accessToken
 				});
 
-				navigate(from, { replace: true });
+				navigate('/dashboard');
 			} else if (response.status === 401) {
 				throw new Error('Username or password incorrect.');
 			} else {

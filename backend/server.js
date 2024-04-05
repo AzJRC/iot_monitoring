@@ -6,9 +6,9 @@ const credentials = require('./middlewares/credentials.js')
 const corsOptions = require('./config/corsOptions.js')
 const cors = require("cors");
 const config = require("./misc/confParser.js")
+const mqtt = require('mqtt')
 
-/* Start Expre..
-ss Web Server */
+/* Start Express Web Server */
 const app = express();
 
 /* middlewares */
@@ -31,7 +31,7 @@ app.use('/devices', require('./routes/devices.js'));
 
 
 /* MQTT Client */
-
+require("./monitor/mqttClient.js")
 
 
 /* Run Express Listener */
