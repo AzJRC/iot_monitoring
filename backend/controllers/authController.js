@@ -24,7 +24,7 @@ const handleAuthentication = async (req, res) => {
 				"roles": row.roles
 			},
 			process.env.ACCESS_TOKEN_SECRET,
-			{ expiresIn: "5m" }
+			{ expiresIn: "1d" }
 		);
 		const refresh_token = jwt.sign(
 			{ username: row.user },

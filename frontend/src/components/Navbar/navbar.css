@@ -16,6 +16,24 @@
     display: flex;
 }
 
+.dashboard__section__navbar a {
+    margin: 0 1rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.dashboard__section__navbar a:hover,
+.dashboard__section__navbar a.active {
+    color: rgb(126, 126, 126);
+}
+
 .dashboard__section__title {
     text-wrap: nowrap;
+    margin-left: 1.5rem;
+}
+
+.dashboard__section__right {
+    display: flex;
+    align-items: center;
 }

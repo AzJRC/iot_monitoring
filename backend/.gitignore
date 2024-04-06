@@ -1,4 +1,4 @@
 node_modules/
-model/*.db
 .env
+*.db
 *.pem
