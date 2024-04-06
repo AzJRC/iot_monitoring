@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useAuth from "./../../hooks/useAuth";
+import Navbar from "../Navbar/Navbar"
 import MonitorWindow from "../MonitorWindow/MonitorWindow";
 import useRefreshToken from "../../hooks/useRefresh";
 import { SERVER_URL } from "../../api/backend_api";
@@ -55,6 +56,7 @@ function DashboardPage() {
 
 	return (
 		<>
+			<Navbar />
 			<section className="dashboard-page__section">
 				<h1>Manage Subscriptions</h1>
 				<form className="dashboard-page__form">

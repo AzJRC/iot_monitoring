@@ -11,7 +11,6 @@ module.exports.createDatabase = (DB_PATH) => {
             console.log('Connected to the database.');
         }
     });
-
     return db;
 }
 

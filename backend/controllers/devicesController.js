@@ -1,12 +1,16 @@
 const db = require("../database.js");
 const { mqttClient } = require("../monitor/mqttClient.js");
 
-
+const TOPIC_REGEX = /((\w+|[+])\/)+(\w+|[#+])/gi;
 module.exports.addDeviceController = async (req, res) => {
 	const { topic } = req.body;
+
+	console.log(topic)
+	if (!topic || topic === "") return res.json('Invalid topic').status(403)
+
 	db.get("SELECT * FROM devices WHERE subscribe_topic = $1 ", topic, (err, row)=>{
 		if (err) return res.json('Something went wrong').status(500);
-		if (row) return res.json('Already subscribed to this topic').status(409);
+		if (row) return res.json('Already subscribed to this topic').status(403);
 		
 		db.run("INSERT INTO devices (subscribe_topic) VALUES ($1)", topic, (err) => {
 			if (err) return res.json('Something went wrong').status(500);
@@ -17,11 +21,13 @@ module.exports.addDeviceController = async (req, res) => {
 			});
 		})
 	})
-	
 };
 
 module.exports.deleteDeviceController = async (req, res) => {
 	const {topic } = req.body;
+
+	if (!topic || topic === "") return res.json('Invalid topic').status(403)
+
 	db.get("SELECT * FROM devices WHERE subscribe_topic = $1 ", topic, (err, row)=>{
 		if (err) return res.json('Something went wrong').status(500);
 		if (!row) return res.json('You are not subscribed to this topic.').status(409);
