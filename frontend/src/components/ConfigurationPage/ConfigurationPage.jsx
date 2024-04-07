@@ -10,7 +10,7 @@ function DashboardPage() {
 
 	const [topic, setTopic] = useState("");
 	const [isFormWindowOpen, setIsFormWindowOpen] = useState(false);
-    const [subscriptions, setSubscriptions] = useState([""]);
+    const [subscriptions, setSubscriptions] = useState(null);
 
 	const addHostBtnRef = useRef(null);
 
@@ -28,12 +28,13 @@ function DashboardPage() {
 		})
         .then((response) => Promise.all([response.json(), response.status]))
         .then(([data, statusCode]) => {
-            console.log(data);
-            console.log(statusCode);
-            setSubscriptions([...subscriptions, topic])
+            // (TODO) Handle each statusCode
+            const newSubscription = [topic, ...subscriptions];
+            setSubscriptions(newSubscription);
+            closeFormWindow();
         })
         .catch((error) => {
-            console.error("Error:", error.message);
+            // (TODO) handle error
         });
 	};
 
@@ -49,11 +50,13 @@ function DashboardPage() {
 		})
         .then((response) => Promise.all([response.json(), response.status]))
         .then(([data, statusCode]) => {
-            console.log(data);
-            console.log(statusCode);
+            // (TODO) Handle each statusCode
+            const filteredSubscriptions = [...subscriptions].filter((subscription) => subscription !== topic);
+            setSubscriptions(filteredSubscriptions);
+            closeFormWindow();
         })
         .catch((error) => {
-            console.error("Error:", error.message);
+            // (TODO) handle error
         });
 	};
 
@@ -78,13 +81,14 @@ function DashboardPage() {
         })
         .then((response) => Promise.all([response.json(), response.status]))
         .then(([data, statusCode]) => {
-            console.log(subscriptions)
-            setSubscriptions([data.subscriptions])
+            // (TODO) Handle each statusCode
+            setSubscriptions([...data.subscriptions])
         })
         .catch((error) => {
-            console.error("Error:", error.message);
+            // (TODO) handle error
         });
     }, []);
+
 
 	return (
 		<>
@@ -107,12 +111,10 @@ function DashboardPage() {
 					}
 				/>
 			)}
-			<section>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-                {subscriptions && subscriptions.map((subscription, index) => (
-                    <p key={index}>{subscription}</p>
-                ))}
-            </div>
+			<section className="ConfigurationPage__section">
+                <div>
+                    {subscriptions && subscriptions.map( (subscription, key) => <p key={key}>{subscription}</p>)}
+                </div>
 			</section>
 		</>
 	);
