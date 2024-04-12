@@ -3,7 +3,6 @@ import MonitorWindow from "../MonitorWindow/MonitorWindow";
 import "./dashboard_page.css";
 
 function DashboardPage() {
-
 	return (
 		<>
 			<Navbar />

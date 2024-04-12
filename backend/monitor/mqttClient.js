@@ -1,6 +1,6 @@
+const { getAllDevices } = require('./../crud/devicesCrud')
 const mqtt = require("mqtt");
 const config = require("../misc/confParser");
-const db = require("../database.js");
 
 const MQTT_BROKER_URL = config.MQTT_BROKER_URL;
 const mqttClient = mqtt.connect(MQTT_BROKER_URL);
@@ -11,19 +11,17 @@ mqttClient.on("connect", () => {
 
 let payload = null;
 mqttClient.on('message', function (topic, message) {
-    // console.log('Received message:', message.toString(), 'on topic:', topic);  
+    console.log('Received message:', message.toString(), 'on topic:', topic);  
 	payload = {topic: topic, message: message.toString()}
 });
 
-// re-subscribe to all topics stored in database
-db.all("SELECT subscribe_topic FROM devices", [], (err, rows)=>{
-    if (err || !rows) return;
-    rows.forEach((row, index) => {
-        mqttClient.subscribe(row.subscribe_topic, function (err) {
-            if (err) return;
-        });
-    })
-})
+(async () => {
+    const devices = await getAllDevices()
+    if (!devices) return;
+    for (let device of devices) {
+        mqttClient.subscribe(device, (err) => {if (err) return});
+    }
+})();
 
 const getCurrentPayload = () => {
     return payload;

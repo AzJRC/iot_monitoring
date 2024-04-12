@@ -8,11 +8,11 @@ const { clearInterval } = require('timers');
 const server = http.createServer();
 const io = socketIo(server, { cors: corsOptions });
 
-
 io.on('connection', (socket) => {
     const interval = setInterval(() => {
         const currentPayload = getCurrentPayload();
         if (currentPayload) {
+            console.log(currentPayload)
             socket.emit(currentPayload.topic, currentPayload.message);
         }
     }, 2000)

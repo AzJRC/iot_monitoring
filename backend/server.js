@@ -5,6 +5,7 @@ const credentials = require('./middlewares/credentials.js')
 const corsOptions = require('./config/corsOptions.js')
 const cors = require("cors");
 const config = require("./misc/confParser.js")
+require('./database.js')
 
 /* Start Express Web Server */
 const app = express();
@@ -19,7 +20,7 @@ app.use(cookieParser());
 /* routes */
 app.use('/auth', require('./routes/auth.js'));
 app.use('/logout', require('./routes/logout.js'));
-app.use('/refresh', require('./routes/refresh.js'));
+// app.use('/refresh', require('./routes/refresh.js')); TODO
 
 
 /* routes that require authentication */

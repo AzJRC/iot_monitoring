@@ -26,12 +26,10 @@ function DashboardPage() {
 			},
 			body: JSON.stringify({ topic }),
 		})
-        .then((response) => Promise.all([response.json(), response.status]))
-        .then(([data, statusCode]) => {
-            // (TODO) Handle each statusCode
-            const newSubscription = [topic, ...subscriptions];
-            setSubscriptions(newSubscription);
-            closeFormWindow();
+        .then(response => {
+            if (response.status === 201) {
+                setSubscriptions([topic, ...subscriptions])
+            }
         })
         .catch((error) => {
             // (TODO) handle error
@@ -48,12 +46,10 @@ function DashboardPage() {
 			},
 			body: JSON.stringify({ topic }),
 		})
-        .then((response) => Promise.all([response.json(), response.status]))
-        .then(([data, statusCode]) => {
-            // (TODO) Handle each statusCode
-            const filteredSubscriptions = [...subscriptions].filter((subscription) => subscription !== topic);
-            setSubscriptions(filteredSubscriptions);
-            closeFormWindow();
+        .then(response => {
+            if (response.status === 201) {
+                setSubscriptions([...subscriptions].filter(subscription => subscription !== topic))
+            }
         })
         .catch((error) => {
             // (TODO) handle error
@@ -79,10 +75,9 @@ function DashboardPage() {
                 Authorization: "Bearer " + auth.accessToken,
             },
         })
-        .then((response) => Promise.all([response.json(), response.status]))
-        .then(([data, statusCode]) => {
-            // (TODO) Handle each statusCode
-            setSubscriptions([...data.subscriptions])
+        .then(async response => {
+            const res = await response.json()
+            setSubscriptions([...res.devices])
         })
         .catch((error) => {
             // (TODO) handle error

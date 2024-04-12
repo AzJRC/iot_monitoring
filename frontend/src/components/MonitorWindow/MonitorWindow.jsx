@@ -35,7 +35,7 @@ const RealtimeChart = () => {
     const [dataPoints, setDataPoints] = useState('');
 
     useEffect(() => {
-        socket.on('iot/test', (data) => {
+        socket.on('temperature', (data) => {
             // setDataPoints(currentPoints => [...currentPoints, data])
             setDataPoints(data);
         })

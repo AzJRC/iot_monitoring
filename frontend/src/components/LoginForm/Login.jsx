@@ -65,25 +65,25 @@ const LoginForm = () => {
 				credentials: 'include'
 			});
 
-			if (response.status === 200) {
+			
+			const status = response.status
+			if ( status === 200) {
 				const res = await response.json();
+				console.log(res)
 				const accessToken = res?.data?.accessToken;
 				const roles = res?.data?.roles;
 
 				setAuth({
 					user,
-					pwd,
 					roles,
 					accessToken
 				});
 
 				navigate('/dashboard');
-			} else if (response.status === 401) {
-				throw new Error('Username or password incorrect.');
 			} else {
-				throw new Error('Unknown error.')
+				const res = await response.json();
+				throw new Error(response.status + ' - ' + JSON.stringify(res))
 			}
-
 		} catch (err) {
 			console.log(err);
 			setErrorMsg("Incorrect username or password");
