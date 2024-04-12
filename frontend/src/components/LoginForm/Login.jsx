@@ -69,7 +69,6 @@ const LoginForm = () => {
 			const status = response.status
 			if ( status === 200) {
 				const res = await response.json();
-				console.log(res)
 				const accessToken = res?.data?.accessToken;
 				const roles = res?.data?.roles;
 

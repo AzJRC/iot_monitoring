@@ -1,46 +1,43 @@
 const db = require("../database.js");
 const jwt = require("jsonwebtoken");
+const { getUserByRefreshToken } = require('./../crud/usersCrud')
 require("dotenv").config();
 
-const handleRefreshToken = (req, res) => {
+const handleRefreshToken = async (req, res) => {
 	
     const refreshToken = req?.cookies?.jwt;
     if (!refreshToken) return res.sendStatus(401);
 
-	db.get("SELECT * FROM users WHERE refresh_token = $refresh_token", refreshToken, async (err, row) => {
-		if (err) return res.status(500);
+    const foundUser = await getUserByRefreshToken(refreshToken)
 
-		// If no rows found, user does not exist
-		if (!row || row.length === 0) {
-			return res.sendStatus(403);
-		}
+    // Validate FoundUser
+	if (!foundUser) return res.status(403).json({ message: "Invalid" });
 
-		jwt.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET,
-            (err, decoded) => {
-                if (err) return res.json(err).status(500);
-                if (decoded.username !== row.user) return res.sendStatus(403);
+	jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        (err, decoded) => {
+            if (err) return res.json(err).status(500);
+            if (decoded.username !== foundUser.dataValues.username) return res.sendStatus(403);
 
-                const newAccessToken = jwt.sign(
-                    { 
-                        'username': decoded.username,
-                        'roles': decoded.roles
-                    },
-                    process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: '5m' }
-                );
-                 
-                const responseData = {
-                    data: {
-                        accessToken: newAccessToken,
-                    },
-                };
+            const newAccessToken = jwt.sign(
+                { 
+                    'username': foundUser.dataValues.username,
+                    'roles': foundUser.dataValues.role
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '8m' }
+            );
+             
+            const responseData = {
+                data: {
+                    accessToken: newAccessToken,
+                },
+            };
 
-                return res.status(200).json(responseData);
-            }
-        )
-	});
+            return res.status(200).json(responseData);
+        }
+    )
 };
 
 module.exports = {

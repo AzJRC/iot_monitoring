@@ -1,10 +1,48 @@
+import { useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { SERVER_URL } from "../api/backend_api";
 import useAuth from "../hooks/useAuth";
 
 const RequireAuth = () => {
-    const { auth } = useAuth();
+    const { auth, setAuth } = useAuth();
     const location = useLocation();
-    // console.log(auth)
+
+    useEffect(() => {
+        const refreshAccessToken = async () => {
+            try {
+                fetch(SERVER_URL + "/refresh", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + auth.accessToken,
+                    },
+                    credentials: 'include'
+                })
+                .then(async response => {
+                    if (response.status === 200) {
+                        const res = await response.json();
+                        setAuth(prev => {
+                            return { ...prev, accessToken: res.data.accessToken }
+                        })
+                    }
+                })
+                .catch((error) => {
+                    // (TODO) handle error
+                });
+            } catch (error) {
+                console.error("Error refreshing access token:", error);
+            }
+        };
+
+        // Set up timer to periodically refresh access token
+        const refreshTime = 1000 * 60 * 5 // 5 minutes
+        const intervalId = setInterval(() => {
+            refreshAccessToken();
+        }, refreshTime);
+
+        return () => clearInterval(intervalId);
+    }, [auth, setAuth]);
+    
     return (
         auth?.user ? <Outlet /> : <Navigate to="/" state={{ from: location }} replace />
     )

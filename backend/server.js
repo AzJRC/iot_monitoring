@@ -19,12 +19,13 @@ app.use(cookieParser());
 
 /* routes */
 app.use('/auth', require('./routes/auth.js'));
-app.use('/logout', require('./routes/logout.js'));
-// app.use('/refresh', require('./routes/refresh.js')); TODO
+
 
 
 /* routes that require authentication */
 app.use(verifyJWT);
+app.use('/logout', require('./routes/logout.js'));
+app.use('/refresh', require('./routes/refresh.js'));
 app.get('/testauth', (req, res) => {res.sendStatus(200);}) /* temporary */
 app.use('/devices', require('./routes/devices.js'));
 

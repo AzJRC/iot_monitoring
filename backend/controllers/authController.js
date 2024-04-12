@@ -20,7 +20,7 @@ module.exports.handleAuthentication = async (req, res) => {
 			"roles": foundUser.dataValues.role
 		},
 		process.env.ACCESS_TOKEN_SECRET,
-		{ expiresIn: "5m" }
+		{ expiresIn: "8m" }
 	);
 	const refresh_token = jwt.sign(
 		{ 
