@@ -6,8 +6,6 @@ import { RxCross1 } from "react-icons/rx";
 import { SERVER_URL } from "../../api/backend_api";
 import "./login.css";
 
-const LOGIN_URL = '/auth';
-
 const LoginForm = () => {
 	const { setAuth } = useAuth();
 	const navigate = useNavigate();
@@ -56,7 +54,7 @@ const LoginForm = () => {
 
 		const userCredentials = { user, pwd };
 		try {
-			const response = await fetch(SERVER_URL + LOGIN_URL, {
+			const response = await fetch(SERVER_URL + '/auth', {
 				method: "POST",
 				body: JSON.stringify(userCredentials),
 				headers: {
