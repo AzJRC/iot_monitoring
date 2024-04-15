@@ -11,7 +11,6 @@ mqttClient.on("connect", () => {
 
 let payload = null;
 mqttClient.on('message', function (topic, message) {
-    console.log('Received message:', message.toString(), 'on topic:', topic);  
 	payload = {topic: topic, message: message.toString()}
 });
 
@@ -26,5 +25,7 @@ mqttClient.on('message', function (topic, message) {
 const getCurrentPayload = () => {
     return payload;
 }
+
+
 
 module.exports = { mqttClient, getCurrentPayload };

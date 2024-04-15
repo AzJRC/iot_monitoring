@@ -4,13 +4,14 @@ import Navbar from "../Navbar/Navbar";
 import Window from "../Window/Window";
 import { SERVER_URL } from "../../api/backend_api";
 import "./configuration_page.css";
+import useDevicesData from "../../hooks/useDevicesData";
 
 function DashboardPage() {
 	const { auth } = useAuth();
+    const { devices , addDevice, removeDevice } = useDevicesData();
 
-	const [topic, setTopic] = useState("");
+	const [newDevice, setNewDevice] = useState("");
 	const [isFormWindowOpen, setIsFormWindowOpen] = useState(false);
-    const [subscriptions, setSubscriptions] = useState(null);
 
 	const addHostBtnRef = useRef(null);
 
@@ -24,15 +25,17 @@ function DashboardPage() {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + auth.accessToken,
 			},
-			body: JSON.stringify({ topic }),
+            credentials: 'include',
+			body: JSON.stringify({ newDevice }),
 		})
         .then(response => {
             if (response.status === 201) {
-                setSubscriptions([topic, ...subscriptions])
+                addDevice(newDevice)
             }
         })
         .catch((error) => {
             // (TODO) handle error
+            console.log(error);
         });
 	};
 
@@ -44,15 +47,17 @@ function DashboardPage() {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + auth.accessToken,
 			},
-			body: JSON.stringify({ topic }),
+			body: JSON.stringify({ newDevice }),
 		})
         .then(response => {
+            console.log(newDevice)
             if (response.status === 201) {
-                setSubscriptions([...subscriptions].filter(subscription => subscription !== topic))
+                removeDevice(newDevice)
             }
         })
         .catch((error) => {
             // (TODO) handle error
+            console.log(error); 
         });
 	};
 
@@ -77,13 +82,16 @@ function DashboardPage() {
         })
         .then(async response => {
             const res = await response.json()
-            setSubscriptions([...res.devices])
+            for (let device in res.devices) {
+                addDevice(device);
+            }
+            
         })
         .catch((error) => {
             // (TODO) handle error
+            console.log(error);
         });
     }, []);
-
 
 	return (
 		<>
@@ -99,7 +107,7 @@ function DashboardPage() {
 					isWindowClosed={closeFormWindow}
 					children={
 						<AddHost
-							inputOnChange={setTopic}
+							inputOnChange={setNewDevice}
 							subscribeOnClick={handleSubscription}
 							unsubscribeOnClick={handleUnsubscription}
 						/>
@@ -108,7 +116,7 @@ function DashboardPage() {
 			)}
 			<section className="ConfigurationPage__section">
                 <div>
-                    {subscriptions && subscriptions.map( (subscription, key) => <p key={key}>{subscription}</p>)}
+                    {devices && devices.map( (device, key) => <p key={key}>{device}</p>)}
                 </div>
 			</section>
 		</>

@@ -9,7 +9,8 @@ module.exports.getDevicesController = async (req, res) => {
 
 
 module.exports.addDeviceController = async (req, res) => {
-	const { topic } = req.body;
+	const { newDevice: topic } = req.body; /* TOOD Fix naming */
+
 	if (!topic || topic === "") return res.status(403).json('Invalid topic');
 	
 	const newDevice = await addDevice(topic)
@@ -22,7 +23,7 @@ module.exports.addDeviceController = async (req, res) => {
 };
 
 module.exports.deleteDeviceController = async (req, res) => {
-	const {topic } = req.body;
+	const { newDevice: topic } = req.body; /* TOOD Fix naming */
 	if (!topic || topic === "") return res.status(403).json('Invalid topic.');
 	
 	const removedDevice = await removeDevice(topic)

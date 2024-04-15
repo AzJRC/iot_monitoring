@@ -2,8 +2,8 @@ import network
 import time
 import socket
 from html import get_webpage
-from io import write_secrets, read_secrets, reset_secrets
-from machine import Pin, reset
+from io import Credentials, write_secrets, read_secrets, reset_secrets
+import machine
 
 MIN_RSSI = -67
 LED = machine.Pin("LED", machine.Pin.OUT)
@@ -13,6 +13,8 @@ class Wifimgr:
         self.ap_ssid = ap_ssid
         self.ap_pwd = ap_pwd
         self.debug = debug
+        
+        self.credentials = Credentials()
 
         self.ap_if = network.WLAN(network.AP_IF) # Access Point Interface
         self.wlan_if = network.WLAN(network.STA_IF) # Wlan Interface
@@ -20,8 +22,6 @@ class Wifimgr:
         # Deactivate both interfaces
         self.ap_if.active(False)
         self.wlan_if.active(False)
-        
-        self.credentials = None
 
         self.URL_ENCODE = {
             "+": ' ',
@@ -42,20 +42,35 @@ class Wifimgr:
     
 
     def __parse_form_data(self, request):
-        self.credentials = {}
+        credentials = {}
         lines = request.split(b'\r\n')
         for line in lines:
             if line.startswith(b'Content-Length'):
                 content_length = int(line.split(b': ')[1])
                 data = lines[-1 * content_length:]
                 for item in data:
-                    if (b'ssid' in item) and (b'pass' in item):
+                    if (b'ssid' in item) and (b'pass' in item) and (b'broker' in item):
                         form_data = item.split(b'&')
-                        self.credentials['SSID'] = self.__decode_url_syntax(form_data[0].split(b'=')[1])
-                        self.credentials['PASSWORD'] = self.__decode_url_syntax(form_data[1].split(b'=')[1])
-                        self.credentials['BROKER'] = self.__decode_url_syntax(form_data[2].split(b'=')[1])
+                        credentials['SSID'] = self.__decode_url_syntax(form_data[0].split(b'=')[1])
+                        credentials['PWD'] = self.__decode_url_syntax(form_data[1].split(b'=')[1])
+                        credentials['BROKER_IP'] = self.__decode_url_syntax(form_data[2].split(b'=')[1])
+                        credentials['SUB_T'] = self.__decode_url_syntax(form_data[3].split(b'=')[1])
+                        credentials['PUB_T'] = self.__decode_url_syntax(form_data[4].split(b'=')[1])
+                        credentials['BROKER_USR'] = self.__decode_url_syntax(form_data[5].split(b'=')[1])
+                        credentials['BROKER_PWD'] = self.__decode_url_syntax(form_data[6].split(b'=')[1])
+                        
+                        # TODO (encapsulte this into a new function in io.py)
+                        write_secrets(ssid = credentials['SSID'], 
+                                      pwd = credentials['PWD'], 
+                                      broker_ip = credentials['BROKER_IP'], 
+                                      sub_t = credentials['SUB_T'], 
+                                      pub_t = credentials['PUB_T'], 
+                                      broker_usr = credentials['BROKER_USR'], 
+                                      broker_pwd = credentials['BROKER_PWD'])
+                        
+                        read_secrets(self.credentials)
         if self.debug:
-            print('Successfully parsed credentials.')
+            print('Credentials have been saved.')
         return True
 
 
@@ -76,6 +91,7 @@ class Wifimgr:
             if seconds > 10:
                 if self.debug:
                     print('Failed to connect to the network.')
+                self.wlan_if.active(False)
                 return False
             if self.debug:
                 print('Trying to connect to ' + ssid + '.')
@@ -88,23 +104,22 @@ class Wifimgr:
 
 
     def ap_mode(self):
-
-        self.credentials, valid = read_secrets()
-        if self.credentials:
+        read_secrets(self.credentials)
+        if (self.credentials.SSID and self.credentials.PWD and self.credentials.BROKER_IP):
             if self.debug:
                 print('Stored credentials found: ', self.credentials)
-            wlan = self.__connect_to_network(self.credentials['SSID'], self.credentials['PASSWORD'])
-            if wlan:
+            if (self.__connect_to_network(self.credentials.SSID, self.credentials.PWD)):
                 if self.debug:
                     print('Connection successfull.')
-                    return (self.credentials, wlan)
+                return True
             else:
+                reset_secrets()
                 if self.debug:
                     print('Bad credentials. reseting device in 5 seconds...')
-                    reset_secrets()
-                    time.sleep(5)
-                    reset()
-
+                time.sleep(5)
+                machine.reset()
+        reset_secrets()
+        
         self.ap_if.config(essid=self.ap_ssid, password=self.ap_pwd)
         self.ap_if.active(True)
         
@@ -126,24 +141,18 @@ class Wifimgr:
         while True:
             conn, _ = s.accept()
             request = conn.recv(1024)   
-            if self.credentials:
-                if self.debug:
-                    print('Received SSID:', self.credentials['SSID'])
-                    print('Received Password:', self.credentials['PASSWORD'])
-                    print('Received Password:', self.credentials['BROKER'])
-                wlan = self.__connect_to_network(self.credentials['SSID'], self.credentials['PASSWORD'])
-                if wlan:
+            if (self.credentials.SSID and self.credentials.PWD and self.credentials.BROKER_IP):
+                if (self.__connect_to_network(self.credentials.SSID, self.credentials.PWD)):
                     conn.send(b'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<h1>Success!</h1>')
                     conn.close()
                     self.ap_if.active(False)
                     if self.debug:
                         print('AP handler has finished.')
-                    break 
+                    break
             self.__parse_form_data(request)
             conn.send(get_webpage(ssids))
             conn.close()
-        write_secrets(credentials)
-        return (self.credentials, wlan)
+        return True
 
     
     def manage_wlan_if(self, mode):
@@ -152,3 +161,12 @@ class Wifimgr:
     
     def manage_ap_if(self, mode):
         self.ap_if.active(mode)
+        
+        
+    def verify_wlan_if(self):
+        return self.wlan_if.isconnected()
+    
+    
+    def verify_ap_if(self, mode):
+        return self.ap_if.isconnected()
+

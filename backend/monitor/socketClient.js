@@ -12,7 +12,6 @@ io.on('connection', (socket) => {
     const interval = setInterval(() => {
         const currentPayload = getCurrentPayload();
         if (currentPayload) {
-            console.log(currentPayload)
             socket.emit(currentPayload.topic, currentPayload.message);
         }
     }, 2000)
@@ -23,4 +22,5 @@ io.on('connection', (socket) => {
 });
 
 const PORT = 2357;
+
 server.listen(PORT, () => console.log('Listening on port', PORT))

@@ -1,11 +1,11 @@
-.dashboard-page__section {
+.dashboardPage__section {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.dashboard-page__form {
+.dashboardPage__widgetContainer {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);

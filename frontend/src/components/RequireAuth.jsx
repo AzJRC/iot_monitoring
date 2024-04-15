@@ -24,10 +24,12 @@ const RequireAuth = () => {
                         setAuth(prev => {
                             return { ...prev, accessToken: res.data.accessToken }
                         })
+                        console.log(auth);
                     }
                 })
                 .catch((error) => {
                     // (TODO) handle error
+                    console.log(error)
                 });
             } catch (error) {
                 console.error("Error refreshing access token:", error);

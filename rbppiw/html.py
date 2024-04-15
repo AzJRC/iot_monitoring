@@ -28,13 +28,32 @@ def get_webpage(ssids):
                 <form method="post" action="/">
                     <table>
                         {buttons}
-                    </table>  
+                    </table>
+                    
                     <p align="center">
                         Password: <input style="height:40px;width:300px;font-size: 35px;" type="password" name="pass" required maxlength="30">
                     </p>
+                    
                     <p align="center">
                         Broker IP: <input style="height:40px;width:300px;font-size: 35px;" type="text" name="broker" placeholder="0.0.0.0" required minlength="7" maxlength="16">
                     </p>
+                    
+                    <p align="center">
+                        Topic (Subscription): <input style="height:40px;width:300px;font-size: 35px;" type="text" name="sub" placeholder="sub/default">
+                    </p>
+                    
+                    <p align="center">
+                        Topic (Publish): <input style="height:40px;width:300px;font-size: 35px;" type="text" name="pub" placeholder="pub/default">
+                    </p>
+                    
+                    <p align="center">
+                        Broker User: <input style="height:40px;width:300px;font-size: 35px;" type="text" name="broker_usr">
+                    </p>
+                    
+                    <p align="center">
+                        Broker Pwd: <input style="height:40px;width:300px;font-size: 35px;" type="text" name="broker_pwd">
+                    </p>
+                    
                     <p align="center"> 
                         <input style="height:70px;width:250px;font-size:40px;margin:0 20px" type="submit" name="button" value="Save">
                     </p>
