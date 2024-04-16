@@ -10,24 +10,24 @@ const server = http.createServer();
 const io = socketIo(server, { cors: corsOptions });
 
 io.on('connection', (socket) => {
-    const interval = setInterval(() => {
-        const currentPayload = getCurrentPayload();
-        if (currentPayload) {
-            socket.emit(currentPayload.topic, currentPayload.message);
-        }
+	const interval = setInterval(() => {
+		const currentPayload = getCurrentPayload();
+		if (currentPayload) {
+			socket.emit(currentPayload.topic, {value: currentPayload.message, timestamp: new Date()});
+		}
 
-        runTesting(socket) // Comment in production
-    }, 2000)
+		runTesting(socket) // Comment in production
+	}, 2000)
 
-    socket.on('disconnect', () => {
-        clearInterval(interval)
-    })
+	socket.on('disconnect', () => {
+		clearInterval(interval)
+	})
 });
 
 // This is just for testing purposes - Comment in production
 const runTesting = (socket) => {
-    const testData = {value: Math.round(Math.random() * 10 + 20), timestamp: new Date()}
-    socket.emit('pub/test', testData)
+	const testData = {value: Math.round(Math.random() * 10 + 20), timestamp: new Date()}
+	socket.emit('pub/test', testData)
 }
 
 
