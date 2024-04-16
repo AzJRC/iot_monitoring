@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import useAuth from "./../../hooks/useAuth";
 import Navbar from "../Navbar/Navbar";
 import Window from "../Window/Window";
-import { SERVER_URL } from "../../api/backend_api";
+import { EXPRESS_SERVER } from "../../api/backend_api";
 import "./configuration_page.css";
 import useDevicesData from "../../hooks/useDevicesData";
 
@@ -19,7 +19,7 @@ function DashboardPage() {
     // functions
 	const handleSubscription = (event) => {
 		event.preventDefault();
-		fetch(SERVER_URL + "/devices/add", {
+		fetch(EXPRESS_SERVER + "/devices/add", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -41,7 +41,7 @@ function DashboardPage() {
 
 	const handleUnsubscription = (event) => {
 		event.preventDefault();
-		fetch(SERVER_URL + "/devices/remove", {
+		fetch(EXPRESS_SERVER + "/devices/remove", {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
@@ -50,7 +50,6 @@ function DashboardPage() {
 			body: JSON.stringify({ newDevice }),
 		})
         .then(response => {
-            console.log(newDevice)
             if (response.status === 201) {
                 removeDevice(newDevice)
             }
@@ -73,7 +72,7 @@ function DashboardPage() {
 
     // useEffect
     useEffect(() => {
-        fetch(SERVER_URL + "/devices", {
+        fetch(EXPRESS_SERVER + "/devices", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -82,9 +81,12 @@ function DashboardPage() {
         })
         .then(async response => {
             const res = await response.json()
-            for (let device in res.devices) {
-                addDevice(device);
+            for (let device of res.devices) {
+                if (!devices.includes(device)) {
+                    addDevice(device)
+                }
             }
+            
             
         })
         .catch((error) => {

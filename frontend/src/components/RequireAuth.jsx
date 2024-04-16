@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { SERVER_URL } from "../api/backend_api";
+import { EXPRESS_SERVER } from "../api/backend_api";
 import useAuth from "../hooks/useAuth";
 
 const RequireAuth = () => {
@@ -10,7 +10,7 @@ const RequireAuth = () => {
     useEffect(() => {
         const refreshAccessToken = async () => {
             try {
-                fetch(SERVER_URL + "/refresh", {
+                fetch(EXPRESS_SERVER + "/refresh", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

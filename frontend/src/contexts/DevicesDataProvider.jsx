@@ -2,9 +2,8 @@ import { createContext, useState } from "react";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import io from "socket.io-client";
-import { SERVER_URL } from "./../api/backend_api";
+import { EXPRESS_SERVER, SOCKET_SERVER } from "./../api/backend_api";
 import useAuth from "./../hooks/useAuth";
-import { TfiControlShuffle } from "react-icons/tfi";
 
 const DevicesDataContext = createContext({});
 const socket = io("http://localhost:2357");
@@ -35,21 +34,22 @@ export const DevicesDataProvider = () => {
                     [device]: data 
                 }));
             };
-    
+            
             // Attach event listener
-            socket.on(device, handleSocketData);
+            socket.on(device, handleSocketData)
         });
     }, [devices, data]);
 
     
     // setDevices
     useEffect(() => {
-        fetch(SERVER_URL + "/devices", {
+        fetch(EXPRESS_SERVER + "/devices", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + auth.accessToken,
             },
+            credentials: 'include'
         })
         .then(async response => {
             const res = await response.json();

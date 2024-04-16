@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaCheck } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
-import { SERVER_URL } from "../../api/backend_api";
+import { EXPRESS_SERVER } from "../../api/backend_api";
 import "./login.css";
 
 const LoginForm = () => {
@@ -54,7 +54,7 @@ const LoginForm = () => {
 
 		const userCredentials = { user, pwd };
 		try {
-			const response = await fetch(SERVER_URL + '/auth', {
+			const response = await fetch(EXPRESS_SERVER + '/auth', {
 				method: "POST",
 				body: JSON.stringify(userCredentials),
 				headers: {

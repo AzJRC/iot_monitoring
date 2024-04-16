@@ -21,7 +21,6 @@ app.use(cookieParser());
 app.use('/auth', require('./routes/auth.js'));
 
 
-
 /* routes that require authentication */
 app.use(verifyJWT);
 app.use('/logout', require('./routes/logout.js'));

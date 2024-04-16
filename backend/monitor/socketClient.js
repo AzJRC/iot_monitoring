@@ -14,6 +14,9 @@ io.on('connection', (socket) => {
         if (currentPayload) {
             socket.emit(currentPayload.topic, currentPayload.message);
         }
+
+        const testData = {value: Math.round(Math.random() * 10 + 20), timestamp: new Date()}
+        socket.emit('pub/test', testData)
     }, 2000)
 
     socket.on('disconnect', () => {
@@ -23,4 +26,4 @@ io.on('connection', (socket) => {
 
 const PORT = 2357;
 
-server.listen(PORT, () => console.log('Listening on port', PORT))
+server.listen(PORT, () => console.log('Socket client on', PORT))
