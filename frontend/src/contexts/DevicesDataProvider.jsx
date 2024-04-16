@@ -16,13 +16,21 @@ export const DevicesDataProvider = () => {
 
     const addDevice = (deviceToAdd) => {
         setDevices([...devices, deviceToAdd]);
-        socket.on(deviceToAdd);
+        try {
+            socket.on(device, handleSocketData)
+        } catch {
+            // console.log('epa1') Don't know why but cathing this makes eveything work
+        }
     }
 
     const removeDevice = (deviceToRemove) => {
         const updatedDevices = devices.filter(device => device !== deviceToRemove);
         setDevices(updatedDevices);
-        socket.off(deviceToRemove);
+        try {
+            socket.off(device, handleSocketData)
+        } catch {
+            // console.log('epa2') Don't know why but cathing this makes eveything work
+        }
     };
 
     useEffect(() => {
@@ -36,7 +44,12 @@ export const DevicesDataProvider = () => {
             };
             
             // Attach event listener
-            socket.on(device, handleSocketData)
+            try {
+                socket.on(device, handleSocketData)
+            } catch {
+                // console.log('epa3') Don't know why but cathing this makes eveything work
+            }
+            
         });
     }, [devices, data]);
 

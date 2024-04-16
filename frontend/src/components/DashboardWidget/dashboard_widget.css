@@ -1,0 +1,50 @@
+.dashboardGridWidget {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0.8rem;
+    align-items: center;
+}
+
+.dashboardGridWidget_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.dashboardGridWidget_header_title {
+    margin: 0 1rem 0 0.5rem;
+}
+
+.dashboardGridWidget_header_deviceName {
+    font-weight: 600;
+}
+
+.dashboardGridWidget_header_hambgIcon {
+    margin-right: 0.5rem;
+}
+
+.dashboardGridWidget_chartContainer {
+    display: flex;
+    width: 100%;
+}
+
+.dashboardGridWidget_chartContainer canvas {
+    display: flex;
+    width: 100%;
+    padding: 1rem 2rem;
+}
+
+.dashboardPage_form {
+    display: flex;
+    flex-direction: column;
+    margin: 1.5rem 0;
+}
+
+.dashboardPage_input_container {
+    display: flex;
+}
+
+.dashboardPage_input_container input {
+    margin: 0 0.2rem;
+}
